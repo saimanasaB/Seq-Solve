@@ -3,7 +3,7 @@ import altair as alt
 import pandas as pd
 
 class Job:
-    def _init_(self, id, deadline, profit):
+    def __init__(self, id, deadline, profit):
         self.id = id
         self.deadline = deadline
         self.profit = profit
@@ -87,5 +87,5 @@ def main():
         st.write("Selected Jobs in Sequence:", [job.id for job in selected_jobs])
         visualize_job_sequence(selected_jobs)
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     main()
