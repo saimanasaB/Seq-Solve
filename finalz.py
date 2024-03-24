@@ -9,6 +9,9 @@ class Job:
         self.profit = profit
 
 def job_sequencing_greedy(jobs):
+    if not jobs:
+        return 0, []
+    
     jobs.sort(key=lambda x: x.profit, reverse=True)
     max_deadline = max(jobs, key=lambda x: x.deadline).deadline
     timeslot = [-1] * (max_deadline + 1)
@@ -34,6 +37,9 @@ def job_sequencing_greedy(jobs):
 
 
 def job_sequencing_dynamic_programming(jobs):
+    if not jobs:
+        return 0, []
+    
     max_deadline = max(jobs, key=lambda x: x.deadline).deadline
     dp = [0] * (max_deadline + 1)
 
@@ -51,6 +57,10 @@ def job_sequencing_dynamic_programming(jobs):
     return max_profit, selected_jobs
 
 def visualize_job_sequence(selected_jobs):
+    if not selected_jobs:
+        st.warning("No jobs selected for visualization.")
+        return
+    
     df = pd.DataFrame([(job.id, job.deadline, job.profit) for job in selected_jobs], columns=['Job ID', 'Deadline', 'Profit'])
     chart = alt.Chart(df).mark_bar().encode(
         x='Deadline',
@@ -86,6 +96,19 @@ def main():
         st.write(f"Max Profit using {algorithm_choice}: {max_profit}")
         st.write("Selected Jobs in Sequence:", [job.id for job in selected_jobs])
         visualize_job_sequence(selected_jobs)
+
+    # Comparative Analysis
+    st.sidebar.subheader("Comparative Analysis")
+    show_analysis = st.sidebar.checkbox("Show Comparative Analysis")
+    if show_analysis:
+        st.subheader("Comparative Analysis of Algorithms")
+        greedy_profit, _ = job_sequencing_greedy(jobs)
+        dp_profit, _ = job_sequencing_dynamic_programming(jobs)
+        analysis_data = pd.DataFrame({
+            'Algorithm': ['Greedy', 'Dynamic Programming'],
+            'Max Profit': [greedy_profit, dp_profit]
+        })
+        st.write(analysis_data)
 
 if __name__ == "__main__":
     main()
