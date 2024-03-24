@@ -51,10 +51,11 @@ def job_sequencing_dynamic_programming(jobs):
     return max_profit, selected_jobs
 
 def visualize_job_sequence(selected_jobs):
-    df = pd.DataFrame([(job.id, job.deadline) for job in selected_jobs], columns=['Job ID', 'Deadline'])
-    chart = alt.Chart(df).mark_bar(color='lightblue').encode(
+    df = pd.DataFrame([(job.id, job.deadline, job.profit) for job in selected_jobs], columns=['Job ID', 'Deadline', 'Profit'])
+    chart = alt.Chart(df).mark_bar().encode(
         x='Deadline',
-        y='Job ID'
+        y='Job ID',
+        color='Profit'
     ).properties(
         title='Job Sequence Visualization'
     )
@@ -88,5 +89,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
