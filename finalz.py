@@ -8,7 +8,7 @@ class Job:
         self.deadline = deadline
         self.profit = profit
 
-def job_sequencing_greedy(jobs):
+def job_sequencing_knapsack(jobs):
     if not jobs:
         return 0, []
     
@@ -75,7 +75,7 @@ def main():
     st.title("Job Sequencing Algorithms")
 
     st.sidebar.title("Options")
-    algorithm_choice = st.sidebar.radio("Choose Algorithm", ("Greedy", "Dynamic Programming"))
+    algorithm_choice = st.sidebar.radio("Choose Algorithm", ("knapsack", "Dynamic Programming"))
 
     num_jobs = st.number_input("Enter the number of jobs", min_value=1, step=1, value=1)
 
@@ -87,8 +87,8 @@ def main():
         jobs.append(Job(id, deadline, profit))
 
     if st.button("Calculate"):
-        if algorithm_choice == "Greedy":
-            max_profit, selected_jobs = job_sequencing_greedy(jobs)
+        if algorithm_choice == "knapsack":
+            max_profit, selected_jobs = job_sequencing_knapsack(jobs)
         
         elif algorithm_choice == "Dynamic Programming":
             max_profit, selected_jobs = job_sequencing_dynamic_programming(jobs)
@@ -102,11 +102,11 @@ def main():
     show_analysis = st.sidebar.checkbox("Show Comparative Analysis")
     if show_analysis:
         st.subheader("Comparative Analysis of Algorithms")
-        greedy_profit, _ = job_sequencing_greedy(jobs)
+        knapsack_profit, _ = job_sequencing_knapsack(jobs)
         dp_profit, _ = job_sequencing_dynamic_programming(jobs)
         analysis_data = pd.DataFrame({
-            'Algorithm': ['Greedy', 'Dynamic Programming'],
-            'Max Profit': [greedy_profit, dp_profit]
+            'Algorithm': ['knapsack', 'Dynamic Programming'],
+            'Max Profit': [knapsack_profit, dp_profit]
         })
         st.write(analysis_data)
 
