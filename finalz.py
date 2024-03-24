@@ -36,7 +36,6 @@ def job_sequencing_knapsack(jobs):
 
     return max_profit, selected_jobs
 
-
 def job_sequencing_dynamic_programming(jobs):
     if not jobs:
         return 0, []
@@ -138,27 +137,21 @@ def main():
         id = st.text_input(f"Job ID for job {i+1}")
         deadline = st.number_input(f"Deadline for job {i+1}", min_value=1, step=1)
         profit = st.number_input(f"Profit for job {i+1}", min_value=0, step=1)
-        if id.strip() and deadline > 0 and profit >= 0:  # Input validation
-            jobs.append(Job(id, deadline, profit))
-        else:
-            st.error("Invalid input! Please make sure all fields are filled correctly.")
+        jobs.append(Job(id, deadline, profit))
 
     if st.button("Calculate"):
-        if not jobs:
-            st.error("No jobs entered. Please enter at least one job.")
-        else:
-            if algorithm_choice == "Knapsack":
-                max_profit, selected_jobs = job_sequencing_knapsack(jobs)
-            elif algorithm_choice == "Dynamic Programming":
-                max_profit, selected_jobs = job_sequencing_dynamic_programming(jobs)
-            elif algorithm_choice == "Max Heap":
-                max_profit, selected_jobs = job_sequencing_max_heap(jobs)
-            elif algorithm_choice == "Branch and Bound":
-                max_profit, selected_jobs = job_sequencing_branch_and_bound(jobs)
+        if algorithm_choice == "Knapsack":
+            max_profit, selected_jobs = job_sequencing_knapsack(jobs)
+        elif algorithm_choice == "Dynamic Programming":
+            max_profit, selected_jobs = job_sequencing_dynamic_programming(jobs)
+        elif algorithm_choice == "Max Heap":
+            max_profit, selected_jobs = job_sequencing_max_heap(jobs)
+        elif algorithm_choice == "Branch and Bound":
+            max_profit, selected_jobs = job_sequencing_branch_and_bound(jobs)
 
-            st.write(f"Max Profit using {algorithm_choice}: {max_profit}")
-            st.write("Selected Jobs in Sequence:", [job.id for job in selected_jobs])
-            visualize_job_sequence(selected_jobs)
+        st.write(f"Max Profit using {algorithm_choice}: {max_profit}")
+        st.write("Selected Jobs in Sequence:", [job.id for job in selected_jobs])
+        visualize_job_sequence(selected_jobs)
 
     # Comparative Analysis
     st.sidebar.subheader("Comparative Analysis")
