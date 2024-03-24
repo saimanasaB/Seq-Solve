@@ -140,18 +140,25 @@ def main():
         jobs.append(Job(id, deadline, profit))
 
     if st.button("Calculate"):
-        if algorithm_choice == "Knapsack":
-            max_profit, selected_jobs = job_sequencing_knapsack(jobs)
-        elif algorithm_choice == "Dynamic Programming":
-            max_profit, selected_jobs = job_sequencing_dynamic_programming(jobs)
-        elif algorithm_choice == "Max Heap":
-            max_profit, selected_jobs = job_sequencing_max_heap(jobs)
-        elif algorithm_choice == "Branch and Bound":
-            max_profit, selected_jobs = job_sequencing_branch_and_bound(jobs)
+        if not any(job.id for job in jobs):
+            st.warning("Please enter Job IDs for all jobs.")
+        elif any(job.deadline < 1 for job in jobs):
+            st.warning("Deadline must be at least 1 for all jobs.")
+        elif any(job.profit < 0 for job in jobs):
+            st.warning("Profit cannot be negative.")
+        else:
+            if algorithm_choice == "Knapsack":
+                max_profit, selected_jobs = job_sequencing_knapsack(jobs)
+            elif algorithm_choice == "Dynamic Programming":
+                max_profit, selected_jobs = job_sequencing_dynamic_programming(jobs)
+            elif algorithm_choice == "Max Heap":
+                max_profit, selected_jobs = job_sequencing_max_heap(jobs)
+            elif algorithm_choice == "Branch and Bound":
+                max_profit, selected_jobs = job_sequencing_branch_and_bound(jobs)
 
-        st.write(f"Max Profit using {algorithm_choice}: {max_profit}")
-        st.write("Selected Jobs in Sequence:", [job.id for job in selected_jobs])
-        visualize_job_sequence(selected_jobs)
+            st.write(f"Max Profit using {algorithm_choice}: {max_profit}")
+            st.write("Selected Jobs in Sequence:", [job.id for job in selected_jobs])
+            visualize_job_sequence(selected_jobs)
 
     # Comparative Analysis
     st.sidebar.subheader("Comparative Analysis")
