@@ -44,8 +44,7 @@ def job_sequencing_priority_queue(jobs):
 
     while min_heap:
         # Pop the job with the highest profit
-        profit, job = heapq.heappop(min_heap)
-        profit = -profit  # Restore original profit value
+        _, job = heapq.heappop(min_heap)  # Unpack only the job
         k = min(max_deadline, job.deadline)
         while k >= 1:
             if timeslot[k] == -1:
@@ -55,6 +54,7 @@ def job_sequencing_priority_queue(jobs):
                 break
             k -= 1
 
+    return max_profit, selected_jobs
     return max_profit, selected_jobs
 
 def job_sequencing_dynamic_programming(jobs):
