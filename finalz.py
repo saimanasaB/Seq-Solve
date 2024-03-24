@@ -23,7 +23,7 @@ def job_sequencing_greedy(jobs):
                 timeslot[k] = job
                 filled_time_slots += 1
                 max_profit += job.profit
-                selected_jobs.append(job)  # Append the whole job object
+                selected_jobs.append(job.id)  # Append only the job ID
                 break
             k -= 1
 
@@ -44,7 +44,7 @@ def job_sequencing_dynamic_programming(jobs):
         for j in range(job.deadline, 0, -1):
             if dp[j] == 0:
                 dp[j] = job.profit
-                selected_jobs.append(job)  # Append the whole job object
+                selected_jobs.append(job.id)  # Append only the job ID
                 break
 
     max_profit = sum(dp)
@@ -84,9 +84,8 @@ def main():
             max_profit, selected_jobs = job_sequencing_dynamic_programming(jobs)
 
         st.write(f"Max Profit using {algorithm_choice}: {max_profit}")
-        st.write("Selected Jobs in Sequence:", [job.id for job in selected_jobs])
+        st.write("Selected Jobs in Sequence:", selected_jobs)  # Displaying only the job IDs
         visualize_job_sequence(selected_jobs)
 
 if __name__ == "__main__":
     main()
-
