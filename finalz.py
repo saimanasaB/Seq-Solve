@@ -55,7 +55,6 @@ def job_sequencing_priority_queue(jobs):
             k -= 1
 
     return max_profit, selected_jobs
-    return max_profit, selected_jobs
 
 def job_sequencing_dynamic_programming(jobs):
     max_deadline = max(jobs, key=lambda x: x.deadline).deadline
