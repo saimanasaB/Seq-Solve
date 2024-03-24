@@ -1,5 +1,6 @@
 import streamlit as st
-import heapq
+import altair as alt
+import pandas as pd
 
 class Job:
     def __init__(self, id, deadline, profit):
@@ -22,7 +23,7 @@ def job_sequencing_greedy(jobs):
                 timeslot[k] = job
                 filled_time_slots += 1
                 max_profit += job.profit
-                selected_jobs.append(job.id)  # Append job ID
+                selected_jobs.append(job)  # Append the whole job object
                 break
             k -= 1
 
@@ -43,11 +44,21 @@ def job_sequencing_dynamic_programming(jobs):
         for j in range(job.deadline, 0, -1):
             if dp[j] == 0:
                 dp[j] = job.profit
-                selected_jobs.append(job.id)  # Append job ID
+                selected_jobs.append(job)  # Append the whole job object
                 break
 
     max_profit = sum(dp)
     return max_profit, selected_jobs
+
+def visualize_job_sequence(selected_jobs):
+    df = pd.DataFrame([(job.id, job.deadline) for job in selected_jobs], columns=['Job ID', 'Deadline'])
+    chart = alt.Chart(df).mark_bar(color='lightblue').encode(
+        x='Deadline',
+        y='Job ID'
+    ).properties(
+        title='Job Sequence Visualization'
+    )
+    st.altair_chart(chart, use_container_width=True)
 
 def main():
     st.title("Job Sequencing Algorithms")
@@ -72,8 +83,10 @@ def main():
             max_profit, selected_jobs = job_sequencing_dynamic_programming(jobs)
 
         st.write(f"Max Profit using {algorithm_choice}: {max_profit}")
-        st.write("Selected Jobs in Sequence:", selected_jobs)
+        st.write("Selected Jobs in Sequence:", [job.id for job in selected_jobs])
+        visualize_job_sequence(selected_jobs)
 
 if __name__ == "__main__":
     main()
+
 
