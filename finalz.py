@@ -125,7 +125,7 @@ def visualize_job_sequence(selected_jobs):
     st.altair_chart(chart, use_container_width=True)
 
 def main():
-    st.title("Job Sequencing Algorithms")
+    st.title("Job Sequencing Problem Solver")
 
     st.sidebar.title("Options")
     algorithm_choice = st.sidebar.radio("Choose Algorithm", ("Knapsack", "Dynamic Programming", "Max Heap", "Branch and Bound"))
