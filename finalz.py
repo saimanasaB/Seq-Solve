@@ -84,6 +84,32 @@ def job_sequencing_max_heap(jobs):
 
     return max_profit, selected_jobs
 
+def job_sequencing_branch_and_bound(jobs):
+    def dfs(deadline, profit, selected_jobs, index):
+        nonlocal max_profit, max_selected_jobs
+        
+        if index == len(jobs) or deadline == 0:
+            if profit > max_profit:
+                max_profit = profit
+                max_selected_jobs = selected_jobs[:]
+            return
+        
+        if jobs[index].deadline >= deadline:
+            dfs(deadline - 1, profit + jobs[index].profit, selected_jobs + [jobs[index]], index + 1)
+        else:
+            dfs(deadline, profit, selected_jobs, index + 1)
+            dfs(deadline - 1, profit + jobs[index].profit, selected_jobs + [jobs[index]], index + 1)
+
+    if not jobs:
+        return 0, []
+
+    jobs.sort(key=lambda x: x.deadline)
+    max_profit = 0
+    max_selected_jobs = []
+    dfs(max(jobs, key=lambda x: x.deadline).deadline, 0, [], 0)
+
+    return max_profit, max_selected_jobs
+
 def visualize_job_sequence(selected_jobs):
     if not selected_jobs:
         st.warning("No jobs selected for visualization.")
@@ -103,7 +129,7 @@ def main():
     st.title("Job Sequencing Algorithms")
 
     st.sidebar.title("Options")
-    algorithm_choice = st.sidebar.radio("Choose Algorithm", ("Knapsack", "Dynamic Programming", "Max Heap"))
+    algorithm_choice = st.sidebar.radio("Choose Algorithm", ("Knapsack", "Dynamic Programming", "Max Heap", "Branch and Bound"))
 
     num_jobs = st.number_input("Enter the number of jobs", min_value=1, step=1, value=1)
 
@@ -121,6 +147,8 @@ def main():
             max_profit, selected_jobs = job_sequencing_dynamic_programming(jobs)
         elif algorithm_choice == "Max Heap":
             max_profit, selected_jobs = job_sequencing_max_heap(jobs)
+        elif algorithm_choice == "Branch and Bound":
+            max_profit, selected_jobs = job_sequencing_branch_and_bound(jobs)
 
         st.write(f"Max Profit using {algorithm_choice}: {max_profit}")
         st.write("Selected Jobs in Sequence:", [job.id for job in selected_jobs])
@@ -134,9 +162,10 @@ def main():
         knapsack_profit, _ = job_sequencing_knapsack(jobs)
         dp_profit, _ = job_sequencing_dynamic_programming(jobs)
         max_heap_profit, _ = job_sequencing_max_heap(jobs)
+        branch_and_bound_profit, _ = job_sequencing_branch_and_bound(jobs)
         analysis_data = pd.DataFrame({
-            'Algorithm': ['Knapsack', 'Dynamic Programming', 'Max Heap'],
-            'Max Profit': [knapsack_profit, dp_profit, max_heap_profit]
+            'Algorithm': ['Knapsack', 'Dynamic Programming', 'Max Heap', 'Branch and Bound'],
+            'Max Profit': [knapsack_profit, dp_profit, max_heap_profit, branch_and_bound_profit]
         })
         st.write(analysis_data)
 
