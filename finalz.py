@@ -1,6 +1,7 @@
 import streamlit as st
 import altair as alt
 import pandas as pd
+import heapq
 
 class Job:
     def __init__(self, id, deadline, profit):
@@ -56,6 +57,33 @@ def job_sequencing_dynamic_programming(jobs):
     max_profit = sum(dp)
     return max_profit, selected_jobs
 
+def job_sequencing_max_heap(jobs):
+    if not jobs:
+        return 0, []
+    
+    max_deadline = max(jobs, key=lambda x: x.deadline).deadline
+    max_heap = []
+    selected_jobs = []
+
+    for job in jobs:
+        heapq.heappush(max_heap, (-job.profit, job.deadline, job))
+
+    timeslot = [-1] * (max_deadline + 1)
+    max_profit = 0
+
+    while max_heap:
+        profit, deadline, job = heapq.heappop(max_heap)
+        k = min(max_deadline, deadline)
+        while k >= 1:
+            if timeslot[k] == -1:
+                timeslot[k] = job
+                max_profit -= profit
+                selected_jobs.append(job)
+                break
+            k -= 1
+
+    return max_profit, selected_jobs
+
 def visualize_job_sequence(selected_jobs):
     if not selected_jobs:
         st.warning("No jobs selected for visualization.")
@@ -75,7 +103,7 @@ def main():
     st.title("Job Sequencing Algorithms")
 
     st.sidebar.title("Options")
-    algorithm_choice = st.sidebar.radio("Choose Algorithm", ("knapsack", "Dynamic Programming"))
+    algorithm_choice = st.sidebar.radio("Choose Algorithm", ("Knapsack", "Dynamic Programming", "Max Heap"))
 
     num_jobs = st.number_input("Enter the number of jobs", min_value=1, step=1, value=1)
 
@@ -87,11 +115,12 @@ def main():
         jobs.append(Job(id, deadline, profit))
 
     if st.button("Calculate"):
-        if algorithm_choice == "knapsack":
+        if algorithm_choice == "Knapsack":
             max_profit, selected_jobs = job_sequencing_knapsack(jobs)
-        
         elif algorithm_choice == "Dynamic Programming":
             max_profit, selected_jobs = job_sequencing_dynamic_programming(jobs)
+        elif algorithm_choice == "Max Heap":
+            max_profit, selected_jobs = job_sequencing_max_heap(jobs)
 
         st.write(f"Max Profit using {algorithm_choice}: {max_profit}")
         st.write("Selected Jobs in Sequence:", [job.id for job in selected_jobs])
@@ -104,9 +133,10 @@ def main():
         st.subheader("Comparative Analysis of Algorithms")
         knapsack_profit, _ = job_sequencing_knapsack(jobs)
         dp_profit, _ = job_sequencing_dynamic_programming(jobs)
+        max_heap_profit, _ = job_sequencing_max_heap(jobs)
         analysis_data = pd.DataFrame({
-            'Algorithm': ['knapsack', 'Dynamic Programming'],
-            'Max Profit': [knapsack_profit, dp_profit]
+            'Algorithm': ['Knapsack', 'Dynamic Programming', 'Max Heap'],
+            'Max Profit': [knapsack_profit, dp_profit, max_heap_profit]
         })
         st.write(analysis_data)
 
