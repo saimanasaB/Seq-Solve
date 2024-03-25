@@ -158,7 +158,7 @@ def main():
             elif algorithm_choice == "Max Heap":
                 # Max Heap algorithm
                 max_profit, selected_jobs = job_sequencing_max_heap(jobs)
-                # Complexity: O(n + n * max_deadline)
+                # Complexity: O(n log n + n * max_deadline)
             elif algorithm_choice == "Branch and Bound":
                 # Branch and Bound algorithm
                 max_profit, selected_jobs = job_sequencing_branch_and_bound(jobs)
@@ -175,7 +175,8 @@ def main():
     show_analysis = st.sidebar.checkbox("Show Comparative Analysis")
     if show_analysis:
         # Calculate profits for all algorithms for analysis
-        knapsack_profit, _ = job_sequencing_knapsack(jobs)
+        knapsack_profit, _ = job
+                knapsack_profit, _ = job_sequencing_knapsack(jobs)
         dp_profit, _ = job_sequencing_dynamic_programming(jobs)
         max_heap_profit, _ = job_sequencing_max_heap(jobs)
         branch_and_bound_profit, _ = job_sequencing_branch_and_bound(jobs)
@@ -185,9 +186,9 @@ def main():
             'Algorithm': ['Knapsack', 'Dynamic Programming', 'Max Heap', 'Branch and Bound'],
             'Max Profit': [knapsack_profit, dp_profit, max_heap_profit, branch_and_bound_profit]
         })
+        
         # Display the analysis data
         st.write(analysis_data)
 
 if __name__ == "__main__":
     main()
-
