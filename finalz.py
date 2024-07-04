@@ -139,12 +139,16 @@ def main():
         else:
             if algorithm_choice == "Knapsack":
                 max_profit, selected_jobs, time_complexity, space_complexity = job_sequencing_knapsack(jobs)
+                st.write(f"The Knapsack algorithm is suitable for moderate-sized problems with the following complexities:")
             elif algorithm_choice == "Dynamic Programming":
                 max_profit, selected_jobs, time_complexity, space_complexity = job_sequencing_dynamic_programming(jobs)
+                st.write(f"The Dynamic Programming algorithm is suitable for problems with overlapping subproblems and the following complexities:")
             elif algorithm_choice == "Max Heap":
                 max_profit, selected_jobs, time_complexity, space_complexity = job_sequencing_max_heap(jobs)
+                st.write(f"The Max Heap algorithm is good for dynamic job selection and has the following complexities:")
             elif algorithm_choice == "Branch and Bound":
                 max_profit, selected_jobs, time_complexity, space_complexity = job_sequencing_branch_and_bound(jobs)
+                st.write(f"The Branch and Bound algorithm is ideal for small-sized problems where the optimal solution is crucial, with the following complexities:")
 
             st.write(f"Max Profit using {algorithm_choice}: {max_profit}")
             st.write("Selected Jobs in Sequence:", [job.id for job in selected_jobs])
@@ -167,6 +171,12 @@ def main():
             'Space Complexity': [knapsack_space, dp_space, max_heap_space, branch_and_bound_space]
         })
         st.write(analysis_data)
+        st.write("""
+            - **Knapsack**: Good for moderate-sized problems with high profit priority.
+            - **Dynamic Programming**: Efficient for problems with overlapping subproblems.
+            - **Max Heap**: Suitable for dynamic job selection based on profit.
+            - **Branch and Bound**: Ideal for small problems requiring optimal solutions.
+        """)
 
 if __name__ == "__main__":
     main()
